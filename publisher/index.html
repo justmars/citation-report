@@ -21,7 +21,7 @@
     
     
       
-        <title>Publisher - Citation Report Docs</title>
+        <title>Publisher Discovery - Citation Report Docs</title>
       
     
     
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Publisher
+              Publisher Discovery
             
           </span>
         </div>
@@ -212,15 +212,35 @@
   
 
 
+  <li class="md-tabs__item">
+    <a href="./" class="md-tabs__link md-tabs__link--active">
+      Publisher Discovery
+    </a>
+  </li>
+
+      
+        
   
   
+
+
+  <li class="md-tabs__item">
+    <a href="../report/" class="md-tabs__link">
+      Report Object
+    </a>
+  </li>
+
+      
+        
   
-    <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
-        Report Discovery
-      </a>
-    </li>
   
+
+
+  <li class="md-tabs__item">
+    <a href="../patterns/" class="md-tabs__link">
+      Patterns
+    </a>
+  </li>
 
       
     </ul>
@@ -299,35 +319,6 @@
     
   
   
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
-          Report Discovery
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Report Discovery" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
-          <span class="md-nav__icon md-icon"></span>
-          Report Discovery
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-    
-  
-  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
@@ -337,12 +328,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Publisher
+          Publisher Discovery
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Publisher
+        Publisher Discovery
       </a>
       
         
@@ -388,24 +379,26 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
     <li class="md-nav__item">
       <a href="../report/" class="md-nav__link">
-        Report
+        Report Object
       </a>
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -413,13 +406,6 @@
       <a href="../patterns/" class="md-nav__link">
         Patterns
       </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -528,8 +514,8 @@
         Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
   
-      <p>Each style will contain a <code>label</code> which is used
-in the final <code>Report</code> object; the <code>regex_exp</code></p>
+      <p>Each publisher is represented by a regex expression <code>regex</code>.
+The <code>group_name</code> should be present in the <code>regex</code>.</p>
 
 
         <details class="quote">
@@ -560,33 +546,37 @@ in the final <code>Report</code> object; the <code>regex_exp</code></p>
 <span class="normal"><a href="#__codelineno-0-32">32</a></span>
 <span class="normal"><a href="#__codelineno-0-33">33</a></span>
 <span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">class</span> <span class="nc">PublisherStyle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Each style will contain a `label` which is used</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="sd">    in the final `Report` object; the `regex_exp`&quot;&quot;&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="o">...</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Report style&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use for uniformity&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="p">)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Full name of the repository&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">group_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>        <span class="o">...</span><span class="p">,</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Regex group name&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Custom regex group that identifies the publisher&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="p">)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="n">regex_exp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>        <span class="o">...</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Regular expression&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a>        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>            <span class="s2">&quot;The regex expression that can be used to extract the various&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>            <span class="s2">&quot; publisher styles, e.g. &#39;Phil.&#39; or &#39;Phil. Report&#39;, &#39;SCRA&#39; or&quot;</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>            <span class="s2">&quot; &#39;S.C.R.A. Note that all expressions are eventually combined in&quot;</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>            <span class="s2">&quot; `REPORT_PATTERN`.&quot;</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="p">),</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="p">)</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pattern</span><span class="p">:</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex_exp</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">class</span> <span class="nc">PublisherStyle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Each publisher is represented by a regex expression `regex`.</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="sd">    The `group_name` should be present in the `regex`.</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="o">...</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Report style&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Use for uniformity&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">group_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="o">...</span><span class="p">,</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Regex group name&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Custom regex group that identifies the publisher&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>        <span class="o">...</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Regular expression&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>            <span class="s2">&quot;The regex expression that can be used to extract the various&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>            <span class="s2">&quot; publisher styles, e.g. &#39;Phil.&#39; or &#39;Phil. Report&#39;, &#39;SCRA&#39; or&quot;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>            <span class="s2">&quot; &#39;S.C.R.A. Note that all expressions are eventually combined in&quot;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>            <span class="s2">&quot; `REPORT_PATTERN`.&quot;</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="p">),</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="p">)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pattern</span><span class="p">:</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -683,7 +673,14 @@ result on text</p></td>
 
       <details class="quote">
         <summary>Source code in <code>citation_report/publisher.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+        <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
 <span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
 <span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
 <span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
@@ -700,38 +697,31 @@ result on text</p></td>
 <span class="normal"><a href="#__codelineno-0-110">110</a></span>
 <span class="normal"><a href="#__codelineno-0-111">111</a></span>
 <span class="normal"><a href="#__codelineno-0-112">112</a></span>
-<span class="normal"><a href="#__codelineno-0-113">113</a></span>
-<span class="normal"><a href="#__codelineno-0-114">114</a></span>
-<span class="normal"><a href="#__codelineno-0-115">115</a></span>
-<span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span>
-<span class="normal"><a href="#__codelineno-0-119">119</a></span>
-<span class="normal"><a href="#__codelineno-0-120">120</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="k">def</span> <span class="nf">get_publisher_label</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">Match</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a regex match object from `published_report.REPORT_PATTERN`,</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">    determine if it contains a group name representing a Report publisher.</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">    Examples:</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">        &gt;&gt;&gt; from citation_report import REPORT_PATTERN, get_publisher_label</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="sd">        &gt;&gt;&gt; assert REPORT_PATTERN.search(&quot;124Phil.1241 statement&quot;) is None</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">        &gt;&gt;&gt; sample = &quot;This is an example 124 Phil. 1241 statement&quot;</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">        &gt;&gt;&gt; m = REPORT_PATTERN.search(sample)</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        &gt;&gt;&gt; m</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">        &lt;re.Match object; span=(19, 33), match=&#39;124 Phil. 1241&#39;&gt;</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="sd">        &gt;&gt;&gt; label = get_publisher_label(m)</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">        &gt;&gt;&gt; label</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">        &#39;Phil.&#39;</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">        match (Match): Based on a prior `re.search` or `re.finditer`</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">            result on text</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="sd">        str | None: The first matching publisher found</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>    <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PHIL</span><span class="p">,</span> <span class="n">SCRA</span><span class="p">,</span> <span class="n">OFFG</span><span class="p">]:</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a>        <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">group_name</span><span class="p">):</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a>            <span class="k">return</span> <span class="n">src</span><span class="o">.</span><span class="n">label</span>
+<span class="normal"><a href="#__codelineno-0-113">113</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="k">def</span> <span class="nf">get_publisher_label</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">Match</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a regex match object from `published_report.REPORT_PATTERN`,</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    determine if it contains a group name representing a Report publisher.</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    Examples:</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">        &gt;&gt;&gt; from citation_report import REPORT_PATTERN, get_publisher_label</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">        &gt;&gt;&gt; assert REPORT_PATTERN.search(&quot;124Phil.1241 statement&quot;) is None</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">        &gt;&gt;&gt; sample = &quot;This is an example 124 Phil. 1241 statement&quot;</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">        &gt;&gt;&gt; m = REPORT_PATTERN.search(sample)</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">        &gt;&gt;&gt; m</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">        &lt;re.Match object; span=(19, 33), match=&#39;124 Phil. 1241&#39;&gt;</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        &gt;&gt;&gt; label = get_publisher_label(m)</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">        &gt;&gt;&gt; label</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="sd">        &#39;Phil.&#39;</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        match (Match): Based on a prior `re.search` or `re.finditer`</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">            result on text</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">        str | None: The first matching publisher found</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PHIL</span><span class="p">,</span> <span class="n">SCRA</span><span class="p">,</span> <span class="n">OFFG</span><span class="p">]:</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">group_name</span><span class="p">):</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="k">return</span> <span class="n">src</span><span class="o">.</span><span class="n">label</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
