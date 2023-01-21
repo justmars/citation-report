@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="reference/">
+        <link rel="next" href="publisher/">
       
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Concept
+              Overview
             
           </span>
         </div>
@@ -200,7 +200,7 @@
 
   <li class="md-tabs__item">
     <a href="." class="md-tabs__link md-tabs__link--active">
-      Concept
+      Overview
     </a>
   </li>
 
@@ -210,35 +210,15 @@
   
 
 
-  <li class="md-tabs__item">
-    <a href="reference/" class="md-tabs__link">
-      Main
-    </a>
-  </li>
-
-      
-        
   
   
-
-
-  <li class="md-tabs__item">
-    <a href="subreference/" class="md-tabs__link">
-      Publisher
-    </a>
-  </li>
-
-      
-        
   
+    <li class="md-tabs__item">
+      <a href="publisher/" class="md-tabs__link">
+        Report Discovery
+      </a>
+    </li>
   
-
-
-  <li class="md-tabs__item">
-    <a href="usage/" class="md-tabs__link">
-      Pattern Matching Examples
-    </a>
-  </li>
 
       
     </ul>
@@ -311,12 +291,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Concept
+          Overview
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
-        Concept
+        Overview
       </a>
       
         
@@ -363,40 +343,72 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
-        Main
-      </a>
-    </li>
-  
-
     
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
-
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          Report Discovery
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Report Discovery" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Report Discovery
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="subreference/" class="md-nav__link">
+      <a href="publisher/" class="md-nav__link">
         Publisher
       </a>
     </li>
   
 
-    
-      
-      
-      
-
+            
+          
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
-        Pattern Matching Examples
+      <a href="report/" class="md-nav__link">
+        Report
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="patterns/" class="md-nav__link">
+        Patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -517,36 +529,40 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><em>Sample Citation</em></td>
+<td align="left"><em>Sample Inconsistencies</em></td>
 <td align="center">Volume no.</td>
 <td align="center">Name / style of the publisher / reporter</td>
 <td align="center">Page number/s of the volume</td>
 <td align="center">Optional date</td>
 </tr>
 <tr>
-<td align="left"><em>1 Phil. Reports 100</em></td>
+<td align="left"><em>1 Phil. Reports 100</em> is equivalent to <em>1 Phil. 100</em></td>
 <td align="center">1</td>
 <td align="center"><code>Phil.</code></td>
 <td align="center">100</td>
 <td align="center">-</td>
 </tr>
 <tr>
-<td align="left"><em>100 S.C.R.A. 105, 101-103</em> (1994)</td>
+<td align="left"><em>100 S.C.R.A. 105, 101-103</em> (1994) is equivalent to <em>100 SCRA 105</em></td>
 <td align="center">1</td>
 <td align="center"><code>SCRA</code></td>
 <td align="center">105</td>
 <td align="center">-</td>
 </tr>
 <tr>
-<td align="left"><em>41 Off. Gazette 1001, Jan. 1, 1949</em></td>
+<td align="left"><em>41 Off. Gazette 1001, Jan. 1, 1949</em> is equivalent to <em>41 O.G. 1001</em></td>
 <td align="center">41</td>
-<td align="center"><code>Offg.</code></td>
+<td align="center"><code>O.G.</code></td>
 <td align="center">1001</td>
 <td align="center">Jan. 1, 1949</td>
 </tr>
 </tbody>
 </table>
-<p>This library takes advantage of regex to detect patterns of citations and outputs a uniform dissection of the same based on the table above.</p>
+<p>This library takes advantage of regex to detect patterns of citations and outputs a uniform dissection of the same based on the table above. See:</p>
+<ol>
+<li><a href="publisher/">Publisher Styles</a>: <code>Phil.</code>, <code>SCRA</code> and <code>O.G.</code></li>
+<li><a href="report/">Report Object</a>: Publisher styles with their accompanying digits, i.e. volume and page numbers</li>
+</ol>
 
 
 
