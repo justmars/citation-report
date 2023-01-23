@@ -10,8 +10,9 @@ from .publisher import OFFG, PHIL, SCRA, get_publisher_label
 
 
 class Report(BaseModel):
-    """The `REPORT_PATTERN` is a `re.Pattern` object that contains pre-defined regex
-    group names. These group names can be mapped to this model's fields:
+    """The [REPORT_PATTERN][report-pattern] is a `re.Pattern` object that
+    contains pre-defined regex group names. These group names can be mapped
+    to the `Report` model's fields:
 
     Field | Type | Description
     --:|:--:|:--
@@ -29,6 +30,12 @@ class Report(BaseModel):
     1. have both a `Docket` and a `Report`,
     2. have just a `Docket`;
     3. have just a `Report`.
+
+    If the value of the property exists, it represents whole `volpubpage` value.
+
+    1. `@phil`
+    2. `@scra`
+    3. `@offg`
     """
 
     publisher: str | None = Field(

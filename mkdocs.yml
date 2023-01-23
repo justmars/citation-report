@@ -28,6 +28,7 @@ extra:
 nav:
 - index.md
 plugins:
+  - autorefs
   - mkdocstrings:
       handlers:
         python:

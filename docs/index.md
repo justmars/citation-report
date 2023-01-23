@@ -39,6 +39,8 @@ _41 Off. Gazette 1001, Jan. 1, 1949_ is equivalent to _41 O.G. 1001_ | 41 | `O.G
 
 ### Report Pattern
 
+::: citation_report.published_report.REPORT_REGEX
+
 ::: citation_report.REPORT_PATTERN
 
 ### get_publisher_label()
