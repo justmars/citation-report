@@ -30,6 +30,7 @@ nav:
 plugins:
   - autorefs
   - mkdocstrings:
+      enable_inventory: true
       handlers:
         python:
           options:
@@ -37,6 +38,8 @@ plugins:
             show_category_heading: true
             show_source: true
             heading_level: 3
+
+
   - search:
       lang: en
 markdown_extensions:
