@@ -664,7 +664,7 @@ group names. These group names can be mapped to this model's fields:</p>
 </tr>
 <tr>
 <td align="right"><code>report_date</code></td>
-<td align="center">optional (str)</td>
+<td align="center">optional (date)</td>
 <td align="left">Optional date associated with the report citation</td>
 </tr>
 </tbody>
@@ -849,7 +849,7 @@ the eventual <code>DockerReportCitation</code> object. It can:</p>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">    `volume` | optional (str) | Publisher volume number.</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    `page` | optional (str) | Publisher volume page.</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">    `volpubpage` | optional (str) | Combined fields: &lt;volume&gt; &lt;publisher&gt; &lt;page&gt;</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    `report_date` | optional (str) | Optional date associated with the report citation</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    `report_date` | optional (date) | Optional date associated with the report citation</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    It&#39;s important that each field be **optional**. The `Report` will be joined</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    to another `BaseModel` object, i.e. the `Docket`, in a third-party library.</span>
