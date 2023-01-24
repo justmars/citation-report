@@ -18,11 +18,14 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-extra:
-  version:
-    provider: mike
 nav:
 - index.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/justmars
+      name: justmars on Github
+copyright: Copyright &copy; Marcelino Veloso III
 plugins:
   - autorefs
   - mkdocstrings:
