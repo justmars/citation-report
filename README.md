@@ -2,7 +2,7 @@
 
 ![Github CI](https://github.com/justmars/citation-report/actions/workflows/main.yml/badge.svg)
 
-Regex formula for Philippine Supreme Court citation reports; utilized in the [LawSQL dataset](https://lawsql.com).
+Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA, PHIL, OFFG; utilized in the [LawSQL dataset](https://lawsql.com).
 
 ## Documentation
 

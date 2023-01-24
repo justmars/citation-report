@@ -1,20 +1,16 @@
 site_name: Citation Report Docs
-site_description: |
-  Regex formula for Philippine Supreme Court citation reports.
+site_description: Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA, PHIL, OFFG
 site_url: https://lawsql.com
 site_author: Marcelino Veloso III
 repo_url: https://github.com/justmars/citation-report
 theme:
   name: "material"
   palette:
-    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-
-    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
@@ -38,8 +34,6 @@ plugins:
             show_category_heading: true
             show_source: true
             heading_level: 3
-
-
   - search:
       lang: en
 markdown_extensions:

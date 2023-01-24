@@ -1,7 +1,7 @@
 import re
 from re import Pattern
 
-from citation_date import report_date
+from citation_date import REPORT_DATE_REGEX
 
 from .publisher import OFFG, PHIL, SCRA
 
@@ -60,7 +60,7 @@ extra = rf"""
             {filler}
         )?
         [\,\s]*
-        {report_date}
+        {REPORT_DATE_REGEX}
     )?
 """
 
@@ -82,6 +82,6 @@ Examples:
     'SCRA'
     >>> sample_match.group("page")
     '109'
-    >>> sample_match.group("report_date")
+    >>> sample_match.group("REPORT_DATE_REGEX")
     'October 29, 1971'
 """
