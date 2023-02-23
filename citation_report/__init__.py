@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from .__main__ import Report
 from .published_report import REPORT_PATTERN, REPORT_REGEX
