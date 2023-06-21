@@ -105,9 +105,7 @@ def test_reports(raw_text, volume, publisher, page):
         ),
     ],
 )
-def test_pass_extended_with_full_dates(
-    data, volume, publisher, page, filler, date
-):
+def test_pass_extended_with_full_dates(data, volume, publisher, page, filler, date):
     assert (match := REPORT_PATTERN.search(data))
     assert match.group("volume") == volume
     assert match.group("publisher") == publisher

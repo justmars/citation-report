@@ -41,9 +41,7 @@ class Report(BaseModel):
     publisher: str | None = Field(
         None,
         title="Report Publisher",
-        description=(
-            "Shorthand label of the publisher involved, e.g. SCRA, Phil. Offg"
-        ),
+        description="Shorthand label of the publisher involved, e.g. SCRA, Phil. Offg",
         max_length=5,
     )
     volume: str | None = Field(
@@ -171,6 +169,4 @@ class Report(BaseModel):
         Returns:
             list[str]: Unique report `volpubpage` strings found in the text
         """  # noqa: E501
-        return list(
-            {r.volpubpage for r in cls.extract_report(text) if r.volpubpage}
-        )
+        return list({r.volpubpage for r in cls.extract_report(text) if r.volpubpage})

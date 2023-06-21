@@ -14,12 +14,12 @@ class PublisherStyle(BaseModel):
     label: str = Field(
         ...,
         title="Report style",
-        description="Use for uniformity",
+        description="Use for uniformity"
     )
     group_name: str = Field(
         ...,
         title="Regex group name",
-        description="Custom regex group that identifies the publisher",
+        description="Custom regex group that identifies the publisher"
     )
     regex: str = Field(
         ...,
