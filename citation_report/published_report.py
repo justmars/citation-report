@@ -3,13 +3,13 @@ from re import Pattern
 
 from citation_date import REPORT_DATE_REGEX
 
-from .publisher import OFFG, PHIL, SCRA
+from .publisher import ReportOffg, ReportPhil, ReportSCRA
 
 PUBLISHERS_REGEX = rf"""
     (?P<publisher>
-        {SCRA.regex}| # contains SCRA_PUB group name
-        {PHIL.regex}| # contains PHIL_PUB group name
-        {OFFG.regex} # contains OG_PUB group name
+        {ReportSCRA.regex}| # contains SCRA_PUB group name
+        {ReportPhil.regex}| # contains PHIL_PUB group name
+        {ReportOffg.regex} # contains OG_PUB group name
     )
 """
 """A partial regex string containing the Publisher options available."""

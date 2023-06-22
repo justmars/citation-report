@@ -18,7 +18,7 @@ from citation_report import Report
     ],
 )
 def test_get_reports(data, volume, publisher, page, report_date):
-    report = next(Report.extract_report(data))
+    report = next(Report.extract_reports(data))
     assert isinstance(report, Report)
     assert report.volume == volume
     assert report.publisher == publisher

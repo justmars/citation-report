@@ -1,3 +1,3 @@
-from .__main__ import Report
+from .main import Report
 from .published_report import REPORT_PATTERN, REPORT_REGEX
-from .publisher import OFFG, PHIL, SCRA, get_publisher_label
+from .publisher import ReportOffg, ReportPhil, ReportSCRA, get_publisher_label

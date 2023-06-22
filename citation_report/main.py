@@ -6,7 +6,13 @@ from dateutil.parser import parse
 from pydantic import BaseModel, Field
 
 from .published_report import REPORT_PATTERN
-from .publisher import OFFG, PHIL, SCRA, get_publisher_label
+from .publisher import ReportOffg, ReportPhil, ReportSCRA, get_publisher_label
+
+
+def is_eq(a: str | None, b: str | None) -> bool:
+    """Checks if string `a` is not None, string `b` is not None and both
+    `a` and `b` are equal."""
+    return all([a, b, a == b])
 
 
 class Report(BaseModel):
@@ -47,22 +53,19 @@ class Report(BaseModel):
     volume: str | None = Field(
         None,
         title="Volume Number",
-        description=(
-            "Publisher volume number - may not be a full digit since it can"
-            " exceptionally include letters."
-        ),
+        description=("Can exceptionally include letters e.g. vol 1a"),
         max_length=10,
     )
     page: str | None = Field(
         None,
         title="Page Number",
-        description="The page number of the publisher volume involved",
+        description="Page number can have letters, e.g. 241a",
         max_length=5,
     )
     volpubpage: str | None = Field(
         None,
         title="Volume Publisher Page",
-        description="Full expression of the report citation",
+        description="Full expression of report citation",
         max_length=20,
     )
     report_date: datetime.date | None = Field(
@@ -71,30 +74,69 @@ class Report(BaseModel):
         description="Exceptionally, report citations reference dates.",
     )
 
+    def __repr__(self) -> str:
+        return f"<Report {str(self)}>"
+
     def __str__(self) -> str:
         return self.volpubpage or ""
 
+    def __eq__(self, other: Self) -> bool:
+        """Naive equality checks will only compare direct values,
+        exceptionally, when volume, publisher and page are provided,
+        must compare all three values with each other.
+
+        Examples:
+            >>> a = Report(volume='10', publisher='Phil.', page='25')
+            >>> b = Report(volume='10', publisher='Phil.')
+            >>> a == b
+            False
+            >>> c = Report(volume='10', publisher='SCRA', page='25')
+            >>> a == c
+            False
+            >>> d = Report(volume='10', publisher='Phil.', page='25')
+            >>> a == d
+            True
+
+        Args:
+            other[Self]: The other Citation being compared
+
+        Returns:
+            bool: Whether values are equal
+        """
+        opt_1 = is_eq(self.volpubpage, other.volpubpage)
+        opt_2 = is_eq(self.phil, other.phil)
+        opt_3 = is_eq(self.scra, other.scra)
+        opt_4 = is_eq(self.offg, other.offg)
+        opt_5 = all(
+            [
+                is_eq(self.publisher, other.publisher),
+                is_eq(self.volume, other.volume),
+                is_eq(self.page, other.page),
+            ]
+        )
+        return any([opt_1, opt_2, opt_3, opt_4, opt_5])
+
     @property
     def phil(self):
-        return self.volpubpage if self.publisher == PHIL.label else None
+        return self.volpubpage if self.publisher == ReportPhil.label else None
 
     @property
     def scra(self):
-        return self.volpubpage if self.publisher == SCRA.label else None
+        return self.volpubpage if self.publisher == ReportSCRA.label else None
 
     @property
     def offg(self):
-        return self.volpubpage if self.publisher == OFFG.label else None
+        return self.volpubpage if self.publisher == ReportOffg.label else None
 
     @classmethod
-    def extract_report(cls, text: str) -> Iterator[Self]:
+    def extract_reports(cls, text: str) -> Iterator[Self]:
         """Given sample legalese `text`, extract all Supreme Court `Report` patterns.
 
         Examples:
             >>> sample = "250 Phil. 271, 271-272, Jan. 1, 2019"
-            >>> report = next(Report.extract(sample))
+            >>> report = next(Report.extract_reports(sample))
             >>> type(report)
-            citation_report.__main__.Report
+            <class 'citation_report.main.Report'>
             >>> report.volpubpage
             '250 Phil. 271'
 
@@ -145,7 +187,7 @@ class Report(BaseModel):
         if report_type.lower() in ["scra", "phil", "offg"]:
             if candidate := data.get(report_type):
                 try:
-                    obj = next(cls.extract_report(candidate))
+                    obj = next(cls.extract_reports(candidate))
                     # will get the @property of the Report with the same name
                     if hasattr(obj, report_type):
                         return obj.__getattribute__(report_type)
@@ -160,8 +202,10 @@ class Report(BaseModel):
 
         Examples:
             >>> text = "(22 Phil. 303; 22 Phil. 303; 176 SCRA 240; Peñalosa v. Tuason, 22 Phil. 303, 313 (1912); Heirs of Roxas v. Galido, 108 Phil. 582 (1960)); Valmonte v. PCSO, supra; Bugnay Const. and Dev. Corp. v. Laron, 176 SCRA 240 (1989)"
-            >>> Report.get_unique(text)
-            ['22 Phil. 303', '108 Phil. 582', '176 SCRA 240']
+            >>> len(Report.get_unique(text))
+            3
+            >>> set(Report.get_unique(text)) == {'22 Phil. 303', '176 SCRA 240', '108 Phil. 582'}
+            True
 
         Args:
             text (str): Text to search for report patterns
@@ -169,4 +213,4 @@ class Report(BaseModel):
         Returns:
             list[str]: Unique report `volpubpage` strings found in the text
         """  # noqa: E501
-        return list({r.volpubpage for r in cls.extract_report(text) if r.volpubpage})
+        return list({r.volpubpage for r in cls.extract_reports(text) if r.volpubpage})

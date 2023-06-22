@@ -11,24 +11,18 @@ class PublisherStyle(BaseModel):
     The `group_name` should be present in the `regex`.
     """
 
-    label: str = Field(
-        ...,
-        title="Report style",
-        description="Use for uniformity"
-    )
+    label: str = Field(..., title="Report style", description="Use for uniformity")
     group_name: str = Field(
         ...,
         title="Regex group name",
-        description="Custom regex group that identifies the publisher"
+        description="Custom regex group that identifies the publisher",
     )
     regex: str = Field(
         ...,
         title="Regular expression",
-        description=(
-            "The regex expression that can be used to extract the various"
-            " publisher styles, e.g. 'Phil.' or 'Phil. Report', 'SCRA' or"
-            " 'S.C.R.A. Note that all expressions are eventually combined in"
-            " `REPORT_PATTERN`."
+        description=(  # noqa: E501
+            "Extract various publisher styles, e.g. 'Phil.' or 'Phil. Report', 'SCRA'"
+            " or 'S.C.R.A. All expressions eventually combined in `REPORT_PATTERN`."
         ),
     )
 
@@ -37,19 +31,19 @@ class PublisherStyle(BaseModel):
         return re.compile(self.regex, re.I | re.X)
 
 
-PHIL = PublisherStyle(
+ReportPhil = PublisherStyle(
     label="Phil.",
     group_name="PHIL_PUB",
     regex=rf"(?P<PHIL_PUB>phil{separator}(rep)?{separator})",
 )  # e.g .4 Phil. Rep., 545
 
-SCRA = PublisherStyle(
+ReportSCRA = PublisherStyle(
     label="SCRA",
     group_name="SCRA_PUB",
     regex=r"(?P<SCRA_PUB>SCRA)",
 )
 
-OFFG = PublisherStyle(
+ReportOffg = PublisherStyle(
     label="O.G.",
     group_name="OG_PUB",
     regex=rf"""(?P<OG_PUB>
@@ -108,6 +102,6 @@ def get_publisher_label(match: Match) -> str | None:
     Returns:
         str | None: The first matching publisher found
     """
-    for src in [PHIL, SCRA, OFFG]:
+    for src in [ReportPhil, ReportSCRA, ReportOffg]:
         if match.group(src.group_name):
             return src.label
