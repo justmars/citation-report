@@ -53,7 +53,7 @@ class Report(BaseModel):
     volume: str | None = Field(
         None,
         title="Volume Number",
-        description=("Can exceptionally include letters e.g. vol 1a"),
+        description="Can exceptionally include letters e.g. vol 1a",
         max_length=10,
     )
     page: str | None = Field(
