@@ -1,9 +1,10 @@
 import datetime
+import unicodedata
 from collections.abc import Iterator
 from typing import Self
 
 from dateutil.parser import parse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from .published_report import REPORT_PATTERN
 from .publisher import ReportOffg, ReportPhil, ReportSCRA, get_publisher_label
@@ -12,7 +13,10 @@ from .publisher import ReportOffg, ReportPhil, ReportSCRA, get_publisher_label
 def is_eq(a: str | None, b: str | None) -> bool:
     """Checks if string `a` is not None, string `b` is not None and both
     `a` and `b` are equal."""
-    return all([a, b, a == b])
+    if a and b:
+        if a.lower() == b.lower():
+            return True
+    return False
 
 
 class Report(BaseModel):
@@ -37,45 +41,40 @@ class Report(BaseModel):
     2. have just a `Docket`;
     3. have just a `Report`.
 
-    If the value of the property exists, it represents whole `volpubpage` value.
+    If the value of the property exists, it represents whole `@volpubpage` value.
 
     1. `@phil`
     2. `@scra`
     3. `@offg`
     """
 
-    publisher: str | None = Field(
-        None,
-        title="Report Publisher",
-        description="Shorthand label of the publisher involved, e.g. SCRA, Phil. Offg",
-        max_length=5,
-    )
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    publisher: str | None = Field(default=None, max_length=5)
     volume: str | None = Field(
-        None,
-        title="Volume Number",
+        default=None,
         description="Can exceptionally include letters e.g. vol 1a",
         max_length=10,
     )
     page: str | None = Field(
-        None,
-        title="Page Number",
+        default=None,
         description="Page number can have letters, e.g. 241a",
         max_length=5,
     )
-    volpubpage: str | None = Field(
-        None,
-        title="Volume Publisher Page",
-        description="Full expression of report citation",
-        max_length=20,
-    )
     report_date: datetime.date | None = Field(
-        None,
-        title="Report Date",
+        default=None,
         description="Exceptionally, report citations reference dates.",
     )
 
+    @field_validator("publisher")
+    def publisher_limited_to_phil_scra_offg(cls, v):
+        options = (ReportPhil.label, ReportSCRA.label, ReportOffg.label)
+        if v and v not in options:
+            raise ValueError(f"not allowed in {options=}")
+        return v
+
     def __repr__(self) -> str:
-        return f"<Report {str(self)}>"
+        return f"<Report {self.volpubpage}>"
 
     def __str__(self) -> str:
         return self.volpubpage or ""
@@ -103,30 +102,45 @@ class Report(BaseModel):
         Returns:
             bool: Whether values are equal
         """
-        opt_1 = is_eq(self.volpubpage, other.volpubpage)
-        opt_2 = is_eq(self.phil, other.phil)
-        opt_3 = is_eq(self.scra, other.scra)
-        opt_4 = is_eq(self.offg, other.offg)
-        opt_5 = all(
+        opt_1 = is_eq(self.phil, other.phil)
+        opt_2 = is_eq(self.scra, other.scra)
+        opt_3 = is_eq(self.offg, other.offg)
+        opt_4 = all(
             [
                 is_eq(self.publisher, other.publisher),
                 is_eq(self.volume, other.volume),
                 is_eq(self.page, other.page),
             ]
         )
-        return any([opt_1, opt_2, opt_3, opt_4, opt_5])
+        return any([opt_1, opt_2, opt_3, opt_4])
 
     @property
     def phil(self):
-        return self.volpubpage if self.publisher == ReportPhil.label else None
+        return (
+            f"{self.volume} {ReportPhil.label} {self.page}"
+            if self.publisher == ReportPhil.label
+            else None
+        )
 
     @property
     def scra(self):
-        return self.volpubpage if self.publisher == ReportSCRA.label else None
+        return (
+            f"{self.volume} {ReportSCRA.label} {self.page}"
+            if self.publisher == ReportSCRA.label
+            else None
+        )
 
     @property
     def offg(self):
-        return self.volpubpage if self.publisher == ReportOffg.label else None
+        return (
+            f"{self.volume} {ReportOffg.label} {self.page}"
+            if self.publisher == ReportOffg.label
+            else None
+        )
+
+    @property
+    def volpubpage(self):
+        return self.phil or self.scra or self.offg
 
     @classmethod
     def extract_reports(cls, text: str) -> Iterator[Self]:
@@ -139,6 +153,10 @@ class Report(BaseModel):
             <class 'citation_report.main.Report'>
             >>> report.volpubpage
             '250 Phil. 271'
+            >>> unnormalized = "50\xa0 Off. Gaz.,\xa0 583"
+            >>> report1 = next(Report.extract_reports(unnormalized))
+            >>> report1.volpubpage
+            '50 O.G. 583'
 
         Args:
             text (str): Text containing report citations.
@@ -146,6 +164,7 @@ class Report(BaseModel):
         Yields:
             Iterator[Self]: Iterator of `Report` instances
         """
+        text = unicodedata.normalize("NFKD", text)
         for match in REPORT_PATTERN.finditer(text):
             report_date = None
             if text := match.group("report_date"):
@@ -163,7 +182,6 @@ class Report(BaseModel):
                     publisher=publisher,
                     volume=volume,
                     page=page,
-                    volpubpage=match.group("volpubpage"),
                     report_date=report_date,
                 )
 
