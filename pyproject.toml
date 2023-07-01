@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "citation-report"
-version = "0.1.6"
+version = "0.1.7"
 description = "Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA, PHIL, OFFG."
 authors = ["Marcelino G. Veloso III <contact@mv3.dev>"]
 homepage = "https://lawsql.com"
@@ -19,7 +19,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.11"
 citation-date = "^0.1.5"
-pydantic = ">=2.0b3"
+pydantic = "^2.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3"
