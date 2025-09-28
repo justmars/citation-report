@@ -18,9 +18,6 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Install project in editable mode
-        run: uv run pip install -e .
-
       - name: Install the project with UV
         run: uv sync --locked --all-extras --dev
 
@@ -31,6 +28,9 @@ jobs:
 
       - name: Lint with pre-commit
         run: pre-commit run --all-files
+
+      - name: Install project in editable mode prior to tests
+        run: uv run pip install -e .
 
       - name: Run tests
         run: uv run pytest
