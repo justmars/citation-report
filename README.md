@@ -1,6 +1,6 @@
-# citation-report
+![Github CI](https://github.com/justmars/citation-report/actions/workflows/ci.yml/badge.svg)
 
-![Github CI](https://github.com/justmars/citation-report/actions/workflows/main.yml/badge.svg)
+# Citation Report Parser
 
 Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA, PHIL, OFFG; utilized in the [LawSQL dataset](https://lawsql.com).
 
@@ -8,18 +8,9 @@ Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA,
 
 See [documentation](https://justmars.github.io/citation-report), building on top of [citation-date](https://justmars.github.io/citation-date).
 
-## Development
-
-Checkout code, create a new virtual environment:
+## Testing
 
 ```sh
-poetry add citation-report # python -m pip install citation-report
-poetry update # install dependencies
-poetry shell
-```
-
-Run tests:
-
-```sh
+uv pip install -e .
 pytest
 ```

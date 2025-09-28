@@ -20,7 +20,7 @@ def is_eq(a: str | None, b: str | None) -> bool:
 
 
 class Report(BaseModel):
-    """The [REPORT_PATTERN][report-pattern] is a `re.Pattern` object that
+    """The `REPORT_PATTERN` is a `re.Pattern` object that
     contains pre-defined regex group names. These group names can be mapped
     to the `Report` model's fields:
 
@@ -97,7 +97,7 @@ class Report(BaseModel):
             True
 
         Args:
-            other[Self]: The other Citation being compared
+            other (Self): The other Report instance to compare.
 
         Returns:
             bool: Whether values are equal
@@ -143,7 +143,7 @@ class Report(BaseModel):
         return self.phil or self.scra or self.offg
 
     @classmethod
-    def extract_reports(cls, text: str) -> Iterator[Self]:
+    def extract_reports(cls, text: str) -> Iterator["Report"]:
         """Given sample legalese `text`, extract all Supreme Court `Report` patterns.
 
         Examples:
@@ -162,7 +162,7 @@ class Report(BaseModel):
             text (str): Text containing report citations.
 
         Yields:
-            Iterator[Self]: Iterator of `Report` instances
+            Iterator["Report"]: Iterator of `Report` instances
         """
         text = unicodedata.normalize("NFKD", text)
         for match in REPORT_PATTERN.finditer(text):

@@ -81,7 +81,7 @@ ReportOffg = PublisherStyle(
 
 
 def get_publisher_label(match: Match) -> str | None:
-    """Given a regex match object from [Report Pattern][report-pattern],
+    """Given a regex match object from `REPORT_PATTERN`,
     determine if it contains a group name representing a Report publisher.
 
     Examples:
