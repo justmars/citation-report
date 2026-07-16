@@ -22,15 +22,15 @@ Every report citation has a required volume, publisher, and first page.
 
 | Component | Capture group | Accepted form |
 | --- | --- | --- |
-| Volume | `volume` | A numeric volume, with the documented `-A` or `a` suffix where observed |
+| Volume | `volume` | An ASCII numeric volume, with the documented `-A` or `a` suffix where observed |
 | Publisher | `publisher` | A recognized `Phil.`, `SCRA`, or Official Gazette variant |
-| Page | `page` | The report's first page |
+| Page | `page` | The first page, optionally with the observed `a` or `-A` suffix |
 | Citation | `volpubpage` | The complete required three-part citation |
 | Date | `report_date` | An optional report date supplied by `citation-date` |
 
 For example, `42 SCRA 109, 117-118, October 29, 1971` captures `42 SCRA 109`
-as `volpubpage`. The pinpoint material is accepted before the date, but is not
-part of the normalized report identity.
+as `volpubpage`. A single numeric pinpoint or range and a date are independent
+optional suffixes; pinpoints are not part of report identity.
 
 ## Publisher Variants
 
@@ -38,6 +38,11 @@ The public normalized labels are `Phil.`, `SCRA`, and `O.G.`. The grammar
 accepts common source spellings including `Phil. Reports`, `S.C.R.A.`,
 `Off. Gaz.`, and `Off. Gazette` where their punctuation follows the observed
 forms.
+
+Attached superscript and circled footnote markers are accepted as page
+boundaries but are never folded into the page number. Other OCR or Unicode
+spelling variants are intentionally unsupported until they have a regression
+fixture.
 
 Use the documented named groups when embedding this pattern in a larger regex.
 The internal publisher-specific groups (`PHIL_PUB`, `SCRA_PUB`, and `OG_PUB`)

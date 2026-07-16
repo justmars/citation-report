@@ -1,15 +1,13 @@
 import re
 from re import Pattern
 
-from citation_date import REPORT_DATE_REGEX
+from citation_date import REPORT_DATE_REGEX, uk_pattern
 
-from .publisher import ReportOffg, ReportPhil, ReportSCRA
+from .publisher import REPORT_STYLES
 
 PUBLISHERS_REGEX = rf"""
     (?P<publisher>
-        {ReportSCRA.regex}| # contains SCRA_PUB group name
-        {ReportPhil.regex}| # contains PHIL_PUB group name
-        {ReportOffg.regex} # contains OG_PUB group name
+        {'|'.join(style.regex for style in REPORT_STYLES)}
     )
 """
 """A partial regex string containing the Publisher options available."""
@@ -19,7 +17,7 @@ volume = r"""
     \b
     (?P<volume>
         [12]? # makes possible from 1000 to 2999
-        \d{1,3}
+        [0-9]{1,3}
         (
             \-A| # See Central Bank v. CA, 159-A Phil. 21, 34 (1975);
             a
@@ -28,13 +26,17 @@ volume = r"""
     \b
 """
 
-page = r"""
-    \b
+footnote_marker = r"[⁰¹²³⁴⁵⁶⁷⁸⁹①-⑳⑴-⒇]"
+
+page = rf"""
     (?P<page>
         [12345]? # makes possible from 1000 to 5999
-        \d{1,3}  # 49 Off. Gazette 4857
+        [0-9]{{1,3}}  # 49 Off. Gazette 4857
+        (?:-?A)?
     )
-    \b
+    (?!-[A-Za-z0-9])
+    (?![A-Za-z0-9_])
+    (?:\b|(?={footnote_marker}))
 """
 
 volpubpage = rf"""
@@ -47,24 +49,24 @@ volpubpage = rf"""
     )
 """
 
+footnote_suffix = rf"(?:{footnote_marker})?"
+
 filler = r"""
     (?P<filler>
-        [\d\-\.]{1,10}
+        (?!""" + uk_pattern.pattern + r""")
+        [0-9]{1,4}
+        (?:-[0-9]{1,4})?
     )
 """
 
+separator = r"(?:\s*,\s*|\s+)"
+
 extra = rf"""
-    (?:
-        (?:
-            [\,\s,\-]*
-            {filler}
-        )?
-        [\,\s]*
-        {REPORT_DATE_REGEX}
-    )?
+    (?:{separator}{filler})?
+    (?:{separator}{REPORT_DATE_REGEX})?
 """
 
-REPORT_REGEX = rf"{volpubpage}{extra}"
+REPORT_REGEX = rf"{volpubpage}{footnote_suffix}{extra}"
 
 REPORT_PATTERN: Pattern = re.compile(REPORT_REGEX, re.X | re.I)
 """A compiled regex expression that enables capturing the
@@ -77,11 +79,11 @@ Examples:
     >>> sample_match.group("volpubpage")
     '42 SCRA 109'
     >>> sample_match.group("volume")
-    '42 SCRA 109'
+    '42'
     >>> sample_match.group("publisher")
     'SCRA'
     >>> sample_match.group("page")
     '109'
-    >>> sample_match.group("REPORT_DATE_REGEX")
+    >>> sample_match.group("report_date")
     'October 29, 1971'
 """

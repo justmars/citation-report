@@ -34,13 +34,13 @@ class PublisherStyle(BaseModel):
 ReportPhil = PublisherStyle(
     label="Phil.",
     group_name="PHIL_PUB",
-    regex=rf"(?P<PHIL_PUB>phil{separator}(rep)?{separator})",
+    regex=rf"(?P<PHIL_PUB>phil{separator}(?:rep(?:ort(?:s)?)?)?{separator})",
 )  # e.g .4 Phil. Rep., 545
 
 ReportSCRA = PublisherStyle(
     label="SCRA",
     group_name="SCRA_PUB",
-    regex=r"(?P<SCRA_PUB>SCRA)",
+    regex=r"(?P<SCRA_PUB>(?:SCRA|S\.C\.R\.A\.))",
 )
 
 ReportOffg = PublisherStyle(
@@ -63,14 +63,15 @@ ReportOffg = PublisherStyle(
                 )
                 (
                     (
-                        suppl? # Supp. vs. Suppl.; 47 Off. Gaz. Suppl. 12
+                        (?P<OG_SUPPLEMENT>suppl?)
+                        # Supp. vs. Suppl.; 47 Off. Gaz. Suppl. 12
                         {separator}
                     )|
                     (
                         \(? # 56 OG (No. 4) 1068
                         no # 49 O.G. No. 7, 2740 (1953),
                         {separator} # 46 O.G. No. 11, 90
-                        \d{{1,4}}  # note enclosing brackets
+                        (?P<OG_ISSUE_NUMBER>[0-9]{{1,4}})  # note enclosing brackets
                         \)?
                         {separator}
                     )
@@ -78,6 +79,8 @@ ReportOffg = PublisherStyle(
             )
         """,
 )
+
+REPORT_STYLES = (ReportPhil, ReportSCRA, ReportOffg)
 
 
 def get_publisher_label(match: Match) -> str | None:
@@ -102,6 +105,6 @@ def get_publisher_label(match: Match) -> str | None:
     Returns:
         str | None: The first matching publisher found
     """
-    for src in [ReportPhil, ReportSCRA, ReportOffg]:
+    for src in REPORT_STYLES:
         if match.group(src.group_name):
             return src.label

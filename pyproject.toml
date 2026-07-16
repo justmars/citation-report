@@ -1,13 +1,12 @@
 [project]
 name = "citation-report"
-version = "0.2.0"
+version = "0.3.0"
 description = "Regex formula of Philippine Supreme Court citations in report format, i.e. SCRA, PHIL, OFFG."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "citation-date >= 0.3.0",
     "pydantic >= 2.13.0",
-    "python-dateutil >= 2.9.0.post0",
 ]
 
 [tool.uv.sources]

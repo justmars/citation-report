@@ -1,13 +1,18 @@
 import datetime
 import unicodedata
-from collections.abc import Iterator
-from typing import Self
+from collections.abc import Iterator, Mapping
 
-from dateutil.parser import parse
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from citation_date import decode_date
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from .published_report import REPORT_PATTERN
-from .publisher import ReportOffg, ReportPhil, ReportSCRA, get_publisher_label
+from .publisher import (
+    REPORT_STYLES,
+    ReportOffg,
+    ReportPhil,
+    ReportSCRA,
+    get_publisher_label,
+)
 
 
 def is_eq(a: str | None, b: str | None) -> bool:
@@ -17,6 +22,15 @@ def is_eq(a: str | None, b: str | None) -> bool:
         if a.lower() == b.lower():
             return True
     return False
+
+
+def normalize_report_text(text: str) -> str:
+    """Normalize report text without promoting compatibility-number footnotes.
+
+    NFC keeps superscript and circled footnote markers distinct from citation
+    digits while retaining ordinary Unicode text unchanged.
+    """
+    return unicodedata.normalize("NFC", text)
 
 
 class Report(BaseModel):
@@ -59,7 +73,16 @@ class Report(BaseModel):
     page: str | None = Field(
         default=None,
         description="Page number can have letters, e.g. 241a",
-        max_length=5,
+        max_length=6,
+    )
+    supplement: bool | None = Field(
+        default=None,
+        description="Whether an Official Gazette citation is from a supplement.",
+    )
+    issue_number: str | None = Field(
+        default=None,
+        max_length=4,
+        description="Optional Official Gazette issue number.",
     )
     report_date: datetime.date | None = Field(
         default=None,
@@ -68,10 +91,26 @@ class Report(BaseModel):
 
     @field_validator("publisher")
     def publisher_limited_to_phil_scra_offg(cls, v):
-        options = (ReportPhil.label, ReportSCRA.label, ReportOffg.label)
+        options = tuple(style.label for style in REPORT_STYLES)
         if v and v not in options:
             raise ValueError(f"not allowed in {options=}")
         return v
+
+    @field_validator("issue_number")
+    def issue_number_is_ascii_digits(cls, v):
+        if v is not None and (not v.isascii() or not v.isdigit()):
+            raise ValueError("issue_number must contain ASCII digits only")
+        return v
+
+    @model_validator(mode="after")
+    def official_gazette_qualifiers_are_consistent(self):
+        if self.supplement and self.issue_number:
+            raise ValueError("a report cannot be both a supplement and an issue")
+        if (
+            self.supplement or self.issue_number
+        ) and self.publisher != ReportOffg.label:
+            raise ValueError("Official Gazette qualifiers require publisher='O.G.'")
+        return self
 
     def __repr__(self) -> str:
         return f"<Report {self.volpubpage}>"
@@ -79,7 +118,7 @@ class Report(BaseModel):
     def __str__(self) -> str:
         return self.volpubpage or ""
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Naive equality checks will only compare direct values,
         exceptionally, when volume, publisher and page are provided,
         must compare all three values with each other.
@@ -102,23 +141,30 @@ class Report(BaseModel):
         Returns:
             bool: Whether values are equal
         """
-        opt_1 = is_eq(self.phil, other.phil)
-        opt_2 = is_eq(self.scra, other.scra)
-        opt_3 = is_eq(self.offg, other.offg)
-        opt_4 = all(
-            [
-                is_eq(self.publisher, other.publisher),
-                is_eq(self.volume, other.volume),
-                is_eq(self.page, other.page),
-            ]
+        if not isinstance(other, Report):
+            return NotImplemented
+        if self is other:
+            return True
+
+        self_identity = self.qualified_volpubpage
+        other_identity = other.qualified_volpubpage
+        if self_identity and other_identity:
+            return self_identity.casefold() == other_identity.casefold()
+
+        return all(
+            getattr(self, field) == getattr(other, field)
+            for field in Report.model_fields
         )
-        return any([opt_1, opt_2, opt_3, opt_4])
+
+    @property
+    def has_complete_identity(self) -> bool:
+        return all((self.publisher, self.volume, self.page))
 
     @property
     def phil(self):
         return (
             f"{self.volume} {ReportPhil.label} {self.page}"
-            if self.publisher == ReportPhil.label
+            if self.has_complete_identity and self.publisher == ReportPhil.label
             else None
         )
 
@@ -126,7 +172,7 @@ class Report(BaseModel):
     def scra(self):
         return (
             f"{self.volume} {ReportSCRA.label} {self.page}"
-            if self.publisher == ReportSCRA.label
+            if self.has_complete_identity and self.publisher == ReportSCRA.label
             else None
         )
 
@@ -134,13 +180,30 @@ class Report(BaseModel):
     def offg(self):
         return (
             f"{self.volume} {ReportOffg.label} {self.page}"
-            if self.publisher == ReportOffg.label
+            if self.has_complete_identity and self.publisher == ReportOffg.label
             else None
         )
 
     @property
     def volpubpage(self):
         return self.phil or self.scra or self.offg
+
+    @property
+    def qualified_offg(self) -> str | None:
+        if not self.offg:
+            return None
+        if self.supplement:
+            return f"{self.volume} {ReportOffg.label} Supp. {self.page}"
+        if self.issue_number:
+            return (
+                f"{self.volume} {ReportOffg.label} No. "
+                f"{self.issue_number}, {self.page}"
+            )
+        return self.offg
+
+    @property
+    def qualified_volpubpage(self) -> str | None:
+        return self.phil or self.scra or self.qualified_offg
 
     @classmethod
     def extract_reports(cls, text: str) -> Iterator["Report"]:
@@ -164,18 +227,23 @@ class Report(BaseModel):
         Yields:
             Iterator["Report"]: Iterator of `Report` instances
         """
-        text = unicodedata.normalize("NFKD", text)
-        for match in REPORT_PATTERN.finditer(text):
-            report_date = None
-            if text := match.group("report_date"):
-                try:
-                    report_date = parse(text).date()
-                except Exception:
-                    report_date = None
+        normalized_text = normalize_report_text(text)
+        for match in REPORT_PATTERN.finditer(normalized_text):
+            raw_report_date = match.group("report_date")
+            decoded_date = (
+                decode_date(raw_report_date, is_output_date_object=True)
+                if raw_report_date
+                else None
+            )
+            report_date = (
+                decoded_date if isinstance(decoded_date, datetime.date) else None
+            )
 
             publisher = get_publisher_label(match)
             volume = match.group("volume")
             page = match.group("page")
+            supplement = True if match.group("OG_SUPPLEMENT") else None
+            issue_number = match.group("OG_ISSUE_NUMBER")
 
             if publisher and volume and page:
                 yield Report(
@@ -183,10 +251,14 @@ class Report(BaseModel):
                     volume=volume,
                     page=page,
                     report_date=report_date,
+                    supplement=supplement,
+                    issue_number=issue_number,
                 )
 
     @classmethod
-    def extract_from_dict(cls, data: dict, report_type: str) -> str | None:
+    def extract_from_dict(
+        cls, data: Mapping[object, object], report_type: str
+    ) -> str | None:
         """Assuming a dictionary with any of the following report_type keys
         `scra`, `phil` or `offg`, get the value of the Report property.
 
@@ -202,15 +274,25 @@ class Report(BaseModel):
         Returns:
             str | None: The value of the key `report_type` in the `data` dict.
         """
-        if report_type.lower() in ["scra", "phil", "offg"]:
-            if candidate := data.get(report_type):
-                try:
-                    obj = next(cls.extract_reports(candidate))
-                    # will get the @property of the Report with the same name
-                    if hasattr(obj, report_type):
-                        return obj.__getattribute__(report_type)
-                except StopIteration:
-                    return None
+        normalized_type = report_type.casefold()
+        if normalized_type not in {"scra", "phil", "offg"}:
+            return None
+
+        candidate = next(
+            (
+                value
+                for key, value in data.items()
+                if isinstance(key, str) and key.casefold() == normalized_type
+            ),
+            None,
+        )
+        if not isinstance(candidate, str):
+            return None
+
+        for obj in cls.extract_reports(candidate):
+            result = getattr(obj, normalized_type)
+            if result:
+                return result
         return None
 
     @classmethod
@@ -231,4 +313,9 @@ class Report(BaseModel):
         Returns:
             list[str]: Unique report `volpubpage` strings found in the text
         """  # noqa: E501
-        return list({r.volpubpage for r in cls.extract_reports(text) if r.volpubpage})
+        unique: dict[str, str] = {}
+        for report in cls.extract_reports(text):
+            identity = report.qualified_volpubpage
+            if identity:
+                unique.setdefault(identity.casefold(), identity)
+        return list(unique.values())
