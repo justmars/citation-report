@@ -84,14 +84,16 @@ wheels = [
 
 [[package]]
 name = "citation-date"
-version = "0.2.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "python-dateutil" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/7c/a5/06b19c5b9684cecbadc0c4e66db6d043f1c276845b9710c3aec5c77c39f0/citation_date-0.2.1.tar.gz", hash = "sha256:b0f5c007072a896ec44b1eb390065c1008e1f5a8cd206453e94f60d8f4ef2b9e", size = 7574, upload-time = "2025-09-28T06:07:53.398Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3b/e9/deb9d024eb12a1519751050b6ae30b69f92f0ecd46dc5ce55096ca10ec22/citation_date-0.2.1-py3-none-any.whl", hash = "sha256:30b1b56aff7bccb89d69f1cac171b6d17ee25d13f6dbe233a813c6b66456c0b6", size = 7508, upload-time = "2025-09-28T06:07:52.384Z" },
+version = "0.3.0"
+source = { editable = "../citation-date" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.1" },
+    { name = "pytest-cov", specifier = ">=7.1" },
+    { name = "zensical", specifier = ">=0.0.50" },
 ]
 
 [[package]]
@@ -101,6 +103,7 @@ source = { editable = "." }
 dependencies = [
     { name = "citation-date" },
     { name = "pydantic" },
+    { name = "python-dateutil" },
 ]
 
 [package.dev-dependencies]
@@ -114,8 +117,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "citation-date", specifier = ">=0.2.1" },
+    { name = "citation-date", editable = "../citation-date" },
     { name = "pydantic", specifier = ">=2.13.0" },
+    { name = "python-dateutil", specifier = ">=2.9.0.post0" },
 ]
 
 [package.metadata.requires-dev]
