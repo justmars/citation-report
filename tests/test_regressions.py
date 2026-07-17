@@ -25,6 +25,22 @@ def test_normalization_is_idempotent_and_keeps_compatibility_numbers_distinct():
     assert normalize_report_text(normalize_report_text(raw)) == raw
 
 
+def test_extract_reports_with_spans_matches_normalized_input():
+    raw = "prefix 50\xa0 Off. Gaz.,\xa0 583"
+    normalized = normalize_report_text(raw)
+
+    assert list(Report.extract_reports_with_spans(raw)) == list(
+        Report.extract_reports_with_spans(normalized, text_is_normalized=True)
+    )
+
+
+def test_extract_reports_with_spans_skips_incomplete_matches(monkeypatch):
+    monkeypatch.setattr("citation_report.main.get_publisher_label", lambda match: None)
+
+    assert list(Report.extract_reports_with_spans("42 SCRA 109")) == []
+    assert list(Report.extract_reports("42 SCRA 109")) == []
+
+
 @pytest.mark.parametrize(
     "raw, filler, expected_date",
     [

@@ -206,6 +206,44 @@ class Report(BaseModel):
         return self.phil or self.scra or self.qualified_offg
 
     @classmethod
+    def extract_reports_with_spans(
+        cls, text: str, *, text_is_normalized: bool = False
+    ) -> Iterator[tuple[tuple[int, int], "Report"]]:
+        """Extract complete reports together with their spans in ``text``.
+
+        ``text_is_normalized`` lets callers that already use
+        :func:`normalize_report_text` retain offsets into their source string.
+        As with :meth:`extract_reports`, incomplete matches are not yielded.
+        """
+        normalized_text = text if text_is_normalized else normalize_report_text(text)
+        for match in REPORT_PATTERN.finditer(normalized_text):
+            raw_report_date = match.group("report_date")
+            decoded_date = (
+                decode_date(raw_report_date, is_output_date_object=True)
+                if raw_report_date
+                else None
+            )
+            report_date = (
+                decoded_date if isinstance(decoded_date, datetime.date) else None
+            )
+
+            publisher = get_publisher_label(match)
+            volume = match.group("volume")
+            page = match.group("page")
+            supplement = True if match.group("OG_SUPPLEMENT") else None
+            issue_number = match.group("OG_ISSUE_NUMBER")
+
+            if publisher and volume and page:
+                yield match.span(), Report(
+                    publisher=publisher,
+                    volume=volume,
+                    page=page,
+                    report_date=report_date,
+                    supplement=supplement,
+                    issue_number=issue_number,
+                )
+
+    @classmethod
     def extract_reports(cls, text: str) -> Iterator["Report"]:
         """Given sample legalese `text`, extract all Supreme Court `Report` patterns.
 
@@ -227,33 +265,8 @@ class Report(BaseModel):
         Yields:
             Iterator["Report"]: Iterator of `Report` instances
         """
-        normalized_text = normalize_report_text(text)
-        for match in REPORT_PATTERN.finditer(normalized_text):
-            raw_report_date = match.group("report_date")
-            decoded_date = (
-                decode_date(raw_report_date, is_output_date_object=True)
-                if raw_report_date
-                else None
-            )
-            report_date = (
-                decoded_date if isinstance(decoded_date, datetime.date) else None
-            )
-
-            publisher = get_publisher_label(match)
-            volume = match.group("volume")
-            page = match.group("page")
-            supplement = True if match.group("OG_SUPPLEMENT") else None
-            issue_number = match.group("OG_ISSUE_NUMBER")
-
-            if publisher and volume and page:
-                yield Report(
-                    publisher=publisher,
-                    volume=volume,
-                    page=page,
-                    report_date=report_date,
-                    supplement=supplement,
-                    issue_number=issue_number,
-                )
+        for _, report in cls.extract_reports_with_spans(text):
+            yield report
 
     @classmethod
     def extract_from_dict(
