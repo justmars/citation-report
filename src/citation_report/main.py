@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from .published_report import REPORT_PATTERN
 from .publisher import (
-    REPORT_STYLES,
+    PUBLISHER_LABELS,
     ReportOffg,
     ReportPhil,
     ReportSCRA,
@@ -91,9 +91,8 @@ class Report(BaseModel):
 
     @field_validator("publisher")
     def publisher_limited_to_phil_scra_offg(cls, v):
-        options = tuple(style.label for style in REPORT_STYLES)
-        if v and v not in options:
-            raise ValueError(f"not allowed in {options=}")
+        if v and v not in PUBLISHER_LABELS:
+            raise ValueError(f"not allowed in options={PUBLISHER_LABELS}")
         return v
 
     @field_validator("issue_number")

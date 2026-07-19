@@ -1,7 +1,7 @@
 import re
 from re import Match, Pattern
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 separator = r"[\.,\s]*"
 
@@ -25,10 +25,13 @@ class PublisherStyle(BaseModel):
             " or 'S.C.R.A. All expressions eventually combined in `REPORT_PATTERN`."
         ),
     )
+    _pattern_cache: tuple[str, Pattern] | None = PrivateAttr(default=None)
 
     @property
     def pattern(self) -> Pattern:
-        return re.compile(self.regex, re.I | re.X)
+        if self._pattern_cache is None or self._pattern_cache[0] != self.regex:
+            self._pattern_cache = (self.regex, re.compile(self.regex, re.I | re.X))
+        return self._pattern_cache[1]
 
 
 ReportPhil = PublisherStyle(
@@ -81,6 +84,10 @@ ReportOffg = PublisherStyle(
 )
 
 REPORT_STYLES = (ReportPhil, ReportSCRA, ReportOffg)
+PUBLISHER_LABELS = tuple(style.label for style in REPORT_STYLES)
+PUBLISHER_GROUP_LABELS = tuple(
+    (style.group_name, style.label) for style in REPORT_STYLES
+)
 
 
 def get_publisher_label(match: Match) -> str | None:
@@ -105,6 +112,6 @@ def get_publisher_label(match: Match) -> str | None:
     Returns:
         str | None: The first matching publisher found
     """
-    for src in REPORT_STYLES:
-        if match.group(src.group_name):
-            return src.label
+    for group_name, label in PUBLISHER_GROUP_LABELS:
+        if match.group(group_name):
+            return label

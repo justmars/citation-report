@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from citation_report import REPORT_PATTERN, Report, normalize_report_text
+from citation_report import REPORT_PATTERN, Report, ReportPhil, normalize_report_text
 
 
 @pytest.mark.parametrize("marker", ["²", "①", "⑵"])
@@ -39,6 +39,18 @@ def test_extract_reports_with_spans_skips_incomplete_matches(monkeypatch):
 
     assert list(Report.extract_reports_with_spans("42 SCRA 109")) == []
     assert list(Report.extract_reports("42 SCRA 109")) == []
+
+
+def test_publisher_pattern_cache_reuses_and_invalidates_on_source_change():
+    original = ReportPhil.regex
+    cached = ReportPhil.pattern
+    assert ReportPhil.pattern is cached
+
+    try:
+        ReportPhil.regex = original + "(?:)"
+        assert ReportPhil.pattern is not cached
+    finally:
+        ReportPhil.regex = original
 
 
 @pytest.mark.parametrize(
