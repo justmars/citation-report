@@ -8,6 +8,7 @@ nav = [
   { "Overview" = "index.md" },
   { "Patterns" = "patterns.md" },
   { "Extracting reports" = "extraction.md" },
+  { "Release notes" = "releases.md" },
   { "Development" = "development.md" },
 ]
 

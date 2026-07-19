@@ -27,6 +27,14 @@ def test_navigation_exactly_covers_documentation_pages() -> None:
     assert set(targets) == pages
 
 
+def test_release_notes_cover_current_project_version() -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    version = project["project"]["version"]
+    release_notes = (DOCS / "releases.md").read_text(encoding="utf-8")
+
+    assert re.search(rf"^## {re.escape(version)}(?:\s|$)", release_notes, re.M)
+
+
 def test_maintained_docs_do_not_depend_on_plan_files() -> None:
     assert not (ROOT / "plans").exists()
     for path in (ROOT / "README.md", *DOCS.rglob("*.md")):

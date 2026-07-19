@@ -195,8 +195,7 @@ class Report(BaseModel):
             return f"{self.volume} {ReportOffg.label} Supp. {self.page}"
         if self.issue_number:
             return (
-                f"{self.volume} {ReportOffg.label} No. "
-                f"{self.issue_number}, {self.page}"
+                f"{self.volume} {ReportOffg.label} No. {self.issue_number}, {self.page}"
             )
         return self.offg
 
@@ -233,13 +232,16 @@ class Report(BaseModel):
             issue_number = match.group("OG_ISSUE_NUMBER")
 
             if publisher and volume and page:
-                yield match.span(), Report(
-                    publisher=publisher,
-                    volume=volume,
-                    page=page,
-                    report_date=report_date,
-                    supplement=supplement,
-                    issue_number=issue_number,
+                yield (
+                    match.span(),
+                    Report(
+                        publisher=publisher,
+                        volume=volume,
+                        page=page,
+                        report_date=report_date,
+                        supplement=supplement,
+                        issue_number=issue_number,
+                    ),
                 )
 
     @classmethod

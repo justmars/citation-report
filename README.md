@@ -24,7 +24,9 @@ assert str(report.report_date) == "2019-01-01"
 ## Documentation
 
 See the [documentation](https://justmars.github.io/citation-report) for
-pattern composition, extraction behavior, and development commands.
+pattern composition, extraction behavior, and development commands. The
+[1.0 release notes](https://justmars.github.io/citation-report/releases/)
+compare the current public contract with the last pushed `0.2.0` release.
 
 ## Testing
 

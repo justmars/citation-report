@@ -7,7 +7,7 @@ from .publisher import REPORT_STYLES
 
 PUBLISHERS_REGEX = rf"""
     (?P<publisher>
-        {'|'.join(style.regex for style in REPORT_STYLES)}
+        {"|".join(style.regex for style in REPORT_STYLES)}
     )
 """
 """A partial regex string containing the Publisher options available."""
@@ -51,13 +51,17 @@ volpubpage = rf"""
 
 footnote_suffix = rf"(?:{footnote_marker})?"
 
-filler = r"""
+filler = (
+    r"""
     (?P<filler>
-        (?!""" + uk_pattern.pattern + r""")
+        (?!"""
+    + uk_pattern.pattern
+    + r""")
         [0-9]{1,4}
         (?:-[0-9]{1,4})?
     )
 """
+)
 
 separator = r"(?:\s*,\s*|\s+)"
 
