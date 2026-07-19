@@ -4,6 +4,11 @@ icon: lucide/wrench
 
 # Development
 
+`extract_reports_with_spans()` is the performance and evidence boundary for
+downstream long-document parsers. Preserve complete-match filtering,
+source-order offsets, qualified Official Gazette identity, and parity between
+raw input and `text_is_normalized=True` input when changing reporter grammar.
+
 ## Setup
 
 Use Python 3.14 and install the package with uv:

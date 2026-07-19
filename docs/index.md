@@ -6,6 +6,10 @@ the report-date grammar from
 [citation-date](https://github.com/justmars/citation-date), while keeping the
 publisher grammar and report extraction local to this package.
 
+`citation-utils` consumes the span-preserving extraction API, and
+`decision-utils` publishes occurrence evidence in its aggregate. This package
+does not resolve a reporter citation to a decision or authenticate the source.
+
 ## Reader Paths
 
 === "Compose a report regex"
