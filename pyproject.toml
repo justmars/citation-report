@@ -6,11 +6,11 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "citation-date >= 1.0.0",
-    "pydantic >= 2.13.0",
+    "pydantic >= 2.13",
 ]
 
-[tool.uv.sources]
-citation-date = { path = "../citation-date", editable = true }
+# [tool.uv.sources]
+# citation-date = { path = "../citation-date", editable = true }
 
 [build-system]
 requires = ["uv_build>=0.11.28,<0.12"]
@@ -21,15 +21,15 @@ dev = [
     # docs
     "zensical >= 0.0.50",
     # notebook examples
-    "marimo >= 0.23.14",
-    "polars >= 1.42.1",
+    "marimo >= 0.23.15",
+    "polars >= 1.43",
     # testing
     "pytest >= 9.1",
     "pytest-cov >= 7.1",
 ]
 
 [tool.pytest.ini_options]
-minversion = "8.4"
+minversion = "9.1"
 addopts = "-ra -q --cov=citation_report --cov-branch --doctest-modules"
 testpaths = ["tests", "src/citation_report"]
 

@@ -1,6 +1,7 @@
 .vscode
 .DS_Store
 .ruff_cache
+__marimo__
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
